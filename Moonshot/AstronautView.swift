@@ -19,8 +19,6 @@ struct AstronautView: View {
         for mission in missions {
             if let _ = mission.crew.first(where: { $0.name == self.astronaut.id }) {
                 listOfMissions.append(mission)
-            } else {
-                fatalError("Missing \(mission)")
             }
         }
         
@@ -40,26 +38,31 @@ struct AstronautView: View {
                         .padding()
                     
                     Section(header: Text("Missions Flown")) {
-                        ForEach(self.flownMissions) { crew in
+                        ForEach(self.flownMissions) { mission in
                             HStack {
-                                Image(crew.image)
+                                Image(mission.image)
                                     .resizable()
                                     .frame(width: 44, height: 44)
                                     .scaledToFit()
                                     .clipShape(Circle())
                                 
                                 VStack(alignment: .leading) {
-                                    Text(crew.displayName)
+                                    Text(mission.displayName)
                                     
-                                    Text(crew.formattedLaunchDate)
+                                    Text(mission.formattedLaunchDate)
                                         .font(.caption)
                                 }
                             }
+                            .scaledToFit()
                         }
                     }
                 }
             }
         }
+    }
+    
+    init(astronaut: Astronaut) {
+        self.astronaut = astronaut
     }
 }
 
@@ -67,6 +70,6 @@ struct AstronautView_Previews: PreviewProvider {
     static let astronauts: [Astronaut] = Bundle.main.decode("astronauts.json")
     
     static var previews: some View {
-        AstronautView(astronaut: astronauts[0])
+        AstronautView(astronaut: astronauts[7])
     }
 }
