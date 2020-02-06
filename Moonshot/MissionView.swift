@@ -21,11 +21,17 @@ struct MissionView: View {
         GeometryReader { geo in
             ScrollView(.vertical) {
                 VStack {
-                    Image(self.mission.image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: geo.size.width * 0.7)
-                        .padding(.top)
+                    GeometryReader { imageGeo in
+                        Image(self.mission.image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: imageGeo.size.width, height: imageGeo.size.height)
+                            .padding(.top, 10)
+                            .scaleEffect(
+                                self.missionImageScaleEffect(imageGeo.frame(in: .global), geo.frame(in: .global))
+                            )
+                    }
+                    .frame(width: geo.size.width, height: geo.size.height * 0.40)
                     
                     Spacer()
                     
@@ -82,6 +88,12 @@ struct MissionView: View {
         }
         
         self.astronauts = matches
+    }
+    
+    func missionImageScaleEffect(_ geoRect: CGRect, _ fullRect: CGRect) -> CGFloat {
+        let scale = geoRect.midY / fullRect.midY * 2
+        
+        return min(max(scale, 0.8), 1)
     }
 }
 
